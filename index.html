@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suka-suka | Aesthetic Gen Z Space</title>
+    
+    <!-- 
+        NEW FONTS:
+        1. Syne (Extra Bold/Artistic)
+        2. Space Grotesk (Tech/Brutalist)
+        3. Plus Jakarta Sans (Geometric Body)
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;600;700&family=Satoshi:wght@400;500;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- GSAP for Heavy Animation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['"Clash Display"', 'sans-serif'],
+                        accent: ['"Satoshi"', 'sans-serif'],
+                        body: ['"Inter"', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#00ced1',   /* Dark Turquoise */
+                        secondary: '#0040ff', /* Blue */
+                        accent: '#ffdd00',    /* Yellow */
+                        offwhite: '#fcfcfc',
+                    },
+                    boxShadow: {
+                        'neo': '4px 4px 0px 0px rgba(0,0,0,1)', /* Sedikit ditipiskan untuk mobile */
+                        'neo-sm': '2px 2px 0px 0px rgba(0,0,0,1)',
+                        'neo-lg': '8px 8px 0px 0px rgba(0,0,0,1)',
+                        'neo-hover': '0px 0px 0px 0px rgba(0,0,0,1)',
+                    },
+                    cursor: {
+                        'none': 'none',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styles & Utilities */
+        body {
+            background-color: #fcfcfc;
+            overflow-x: hidden;
+            /* Cursor hidden only on desktop to allow custom follower */
+        }
+        @media (min-width: 768px) {
+            body { cursor: none; }
+        }
+
+        /* Marquee Animation */
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 15s linear infinite; /* Lebih cepat sedikit untuk mobile */
+        }
+        @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Custom Cursor - Hidden on Touch Devices */
+        .cursor-follower {
+            display: none; /* Default hidden */
+        }
+        @media (min-width: 768px) {
+            .cursor-follower {
+                display: block;
+                position: fixed;
+                width: 20px;
+                height: 20px;
+                background-color: black;
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 9999;
+                transform: translate(-50%, -50%);
+                mix-blend-mode: difference;
+                transition: width 0.3s, height 0.3s;
+            }
+            .cursor-active {
+                width: 60px;
+                height: 60px;
+            }
+        }
+
+        /* Mobile Tap Highlight Removal */
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Selection */
+        ::selection {
+            background-color: #00ced1;
+            color: black;
+        }
+    </style>
+</head>
+<body class="text-black font-body selection:bg-primary selection:text-black">
+
+    <!-- Custom Cursor Follower (Desktop Only) -->
+    <div class="cursor-follower"></div>
+
+    <!-- Mobile-Specific Decorations (Static, lightweight) -->
+    <div class="md:hidden absolute top-32 right-[-20px] w-20 h-20 bg-accent border-2 border-black rounded-full z-0 opacity-80"></div>
+    <div class="md:hidden absolute top-[500px] left-[-20px] w-16 h-16 bg-primary border-2 border-black rotate-12 z-0"></div>
+
+    <!-- Desktop Parallax Decor (Hidden on Mobile) -->
+    <div class="fixed top-20 left-10 w-16 h-16 bg-primary border-4 border-black shadow-neo rounded-full parallax-shape z-0 hidden md:block" data-speed="0.2"></div>
+    <div class="fixed bottom-20 right-10 w-24 h-24 bg-secondary border-4 border-black shadow-neo z-0 hidden md:block" style="border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;" data-speed="-0.3"></div>
+    <div class="fixed top-1/2 left-1/2 w-8 h-8 bg-accent border-2 border-black rounded-full z-0 hidden md:block" data-speed="0.5"></div>
+
+    <!-- 1. HERO SECTION -->
+    <header class="relative min-h-screen flex flex-col justify-between border-b-4 border-black">
+        
+        <!-- Navbar -->
+        <nav class="flex justify-between items-center p-6 z-20">
+            <!-- Logo Text -->
+            <div class="text-xl md:text-2xl font-bold font-accent tracking-tighter uppercase magnetic-item">
+                Suka-suka<span class="text-secondary">.</span>
+            </div>
+            <!-- Menu Button (Responsive Touch) -->
+            <button class="bg-primary px-5 py-2 text-sm md:text-base font-bold font-accent border-2 border-black shadow-neo-sm active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all duration-100 magnetic-item">
+                MENU
+            </button>
+        </nav>
+
+        <!-- Main Hero Content -->
+        <div class="flex-grow flex flex-col justify-center items-center text-center z-10 px-4 pb-12">
+            <div class="relative w-full">
+                <!-- Tagline Kecil -->
+                <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 md:-top-12 md:-left-20 md:translate-x-0 bg-accent px-4 py-1 border-2 border-black shadow-neo-sm font-bold font-accent -rotate-6 md:-rotate-12 animate-float text-xs md:text-base">
+                    EST. 2025
+                </div>
+                
+                <!-- Judul Utama: Menggunakan VW units untuk Mobile agar Full Width -->
+                <h1 class="text-[16vw] md:text-9xl font-display font-extrabold leading-[0.85] overflow-hidden reveal-text tracking-tight">
+                    <span class="inline-block relative">
+                        PURE
+                        <span class="absolute -right-4 top-0 text-2xl text-secondary animate-bounce hidden md:inline">★</span>
+                    </span> <br>
+                    <span class="inline-block text-secondary">VIBES</span> <br>
+                    <span class="inline-block text-transparent bg-clip-text bg-gradient-to-r from-black to-gray-800" style="-webkit-text-stroke: 1px black;">ONLY</span>
+                </h1>
+            </div>
+            
+            <!-- Deskripsi -->
+            <p class="mt-8 max-w-[90%] md:max-w-md text-sm md:text-lg font-bold font-body bg-white border-2 border-black p-4 shadow-neo-sm transform -rotate-1 md:-rotate-2 reveal-fade mx-auto">
+                Curating the chaotic aesthetic of Gen Z. <br>
+                Raw, unfiltered, and totally cool dude.
+            </p>
+
+            <!-- CTA Button -->
+            <div class="mt-10 md:mt-12 flex gap-6 reveal-fade">
+                <a href="#gallery" class="group relative inline-block magnetic-btn active:scale-95 transition-transform duration-100">
+                    <span class="relative z-10 block px-6 py-3 md:px-8 md:py-4 bg-black text-white text-lg md:text-xl font-bold font-accent border-2 border-transparent group-hover:bg-secondary transition-colors duration-300">
+                        EXPLORE NOW
+                    </span>
+                    <span class="absolute top-0 left-0 w-full h-full bg-primary border-2 border-black transform translate-x-1 translate-y-1 md:translate-x-2 md:translate-y-2 -z-0 transition-transform duration-300 group-hover:translate-x-3 group-hover:translate-y-3"></span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Marquee -->
+        <div class="border-t-4 border-black bg-accent py-2 md:py-3 z-10 marquee-wrapper">
+            <div class="marquee-container">
+                <div class="marquee-content font-accent font-bold text-lg md:text-2xl uppercase tracking-widest">
+                    ★ Suka-suka ★ Aesthetic ★ No Filter ★ Just Vibes ★ Cool Dude ★ Suka-suka ★ Aesthetic ★ No Filter ★ Just Vibes ★ Cool Dude ★
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. GALLERY SECTION -->
+    <section id="gallery" class="relative py-16 px-4 md:px-12 bg-white">
+        
+        <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+            <!-- Judul Section -->
+            <h2 class="text-6xl md:text-7xl font-display font-black uppercase leading-[0.85] section-title">
+                The <br> <span class="text-primary italic">Dump</span>
+            </h2>
+            <div class="mt-6 md:mt-0 max-w-sm text-right section-desc">
+                <p class="font-bold font-accent border-b-4 border-black inline-block pb-1 text-sm md:text-base">SCROLL FOR SEROTONIN</p>
+            </div>
+        </div>
+
+        <!-- Masonry Layout -->
+        <div class="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+            
+            <!-- Item 1 -->
+            <div class="break-inside-avoid gallery-item relative group">
+                <div class="absolute -top-2 -left-2 bg-secondary text-white px-2 py-1 font-bold font-accent text-xs border-2 border-black z-10">
+                    #OOTD
+                </div>
+                <div class="border-4 border-black shadow-neo active:shadow-none active:translate-x-1 active:translate-y-1 transition-all duration-200 overflow-hidden">
+                    <img src="images/pixar.png" 
+                         alt="Fashion" 
+                         class="w-full h-auto object-cover grayscale group-hover:grayscale-0 scale-100 group-hover:scale-110 transition-transform duration-500">
+                </div>
+                <div class="mt-2 font-bold font-display text-xl">Street Core</div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="break-inside-avoid gallery-item relative group mt-8 md:mt-0">
+                <div class="border-4 border-black shadow-neo overflow-hidden active:shadow-none transition-all duration-200">
+                    <img src="images/jjang.png" 
+                         alt="Cool" 
+                         class="w-full h-auto object-cover group-hover:scale-110 transition-transform duration-500">
+                </div>
+                <div class="mt-2 font-bold font-display text-xl">That Vibe</div>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="break-inside-avoid gallery-item relative group">
+                <div class="border-4 border-black shadow-neo bg-black p-1 active:shadow-none transition-all duration-200">
+                    <img src="images/wajah.png" 
+                         alt="Aesthetic" 
+                         class="w-full h-auto object-cover opacity-90 group-hover:opacity-100 transition-opacity">
+                </div>
+                <div class="mt-2 font-bold font-display text-xl text-right">Selfie 001</div>
+            </div>
+
+            <!-- Item 4 (Quote) -->
+            <div class="break-inside-avoid gallery-item relative group">
+                <div class="bg-white border-4 border-black shadow-neo p-6 md:p-8 active:bg-accent transition-colors duration-200">
+                    <p class="font-display text-2xl md:text-3xl italic font-bold leading-tight">
+                        "I don't dress to impress. I dress to depress."
+                    </p>
+                    <p class="mt-4 font-bold font-accent text-sm">— 2025 MOOD</p>
+                </div>
+            </div>
+
+            <!-- Item 5 -->
+            <div class="break-inside-avoid gallery-item relative group">
+                <div class="border-4 border-black shadow-neo active:shadow-none transition-all duration-200 overflow-hidden rounded-[2rem] rounded-tr-none">
+                    <img src="images/bluenavy.png" 
+                         alt="Neon" 
+                         class="w-full h-auto object-cover">
+                </div>
+            </div>
+
+            <!-- Item 6 -->
+            <div class="break-inside-avoid gallery-item relative group">
+                <div class="absolute -bottom-2 -right-2 bg-primary border-2 border-black w-full h-full -z-10"></div>
+                <div class="border-4 border-black bg-white p-2">
+                    <img src="images/cafelate.png" 
+                         alt="Retro" 
+                         class="w-full h-auto object-cover grayscale contrast-125 group-hover:grayscale-0 transition-all">
+                </div>
+                <div class="mt-2 font-bold font-display text-xl">Retro Future</div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- 3. FOOTER -->
+    <footer class="bg-secondary text-white border-t-4 border-black pt-12 pb-8 px-6 overflow-hidden relative">
+        <!-- Giant Background Text -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-10 flex items-center">
+            <h1 class="text-[25vw] font-display font-black leading-none text-white whitespace-nowrap -ml-10">SUKA SUKA</h1>
+        </div>
+
+        <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
+            <div>
+                <h3 class="text-3xl md:text-4xl font-display font-bold mb-6">Stay Cool.</h3>
+                <div class="flex gap-4">
+                    <a href="#" class="w-12 h-12 bg-white text-black border-2 border-black flex items-center justify-center text-xl shadow-neo-sm active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                    <a href="#" class="w-12 h-12 bg-white text-black border-2 border-black flex items-center justify-center text-xl shadow-neo-sm active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all">
+                        <i class="fa-brands fa-tiktok"></i>
+                    </a>
+                    <a href="#" class="w-12 h-12 bg-white text-black border-2 border-black flex items-center justify-center text-xl shadow-neo-sm active:shadow-none active:translate-x-[2px] active:translate-y-[2px] transition-all">
+                        <i class="fa-solid fa-envelope"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="text-left md:text-right w-full md:w-auto border-t-2 border-white/20 pt-4 md:border-none md:pt-0">
+                <p class="font-display italic text-lg md:text-xl">Created for Gen Z</p>
+                <p class="font-bold font-body text-xs md:text-sm mt-2 opacity-80">© 2025 Suka-suka Inc. No Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- GSAP INTERACTIVITY SCRIPT -->
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // 1. CUSTOM CURSOR (Only on Desktop)
+        if (window.matchMedia("(min-width: 768px)").matches) {
+            const cursor = document.querySelector('.cursor-follower');
+            const magneticItems = document.querySelectorAll('.magnetic-item, .magnetic-btn, .gallery-item');
+
+            document.addEventListener('mousemove', (e) => {
+                gsap.to(cursor, {
+                    x: e.clientX,
+                    y: e.clientY,
+                    duration: 0.1,
+                    ease: "power2.out"
+                });
+            });
+
+            magneticItems.forEach(item => {
+                item.addEventListener('mouseenter', () => cursor.classList.add('cursor-active'));
+                item.addEventListener('mouseleave', () => cursor.classList.remove('cursor-active'));
+            });
+
+            // Magnetic Button Logic (Desktop Only)
+            const magnets = document.querySelectorAll('.magnetic-item, .magnetic-btn');
+            magnets.forEach((magnet) => {
+                magnet.addEventListener('mousemove', (e) => {
+                    const rect = magnet.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    
+                    gsap.to(magnet, {
+                        x: x * 0.3, 
+                        y: y * 0.3, 
+                        duration: 0.3, 
+                        ease: "power2.out"
+                    });
+                });
+
+                magnet.addEventListener('mouseleave', () => {
+                    gsap.to(magnet, {
+                        x: 0, 
+                        y: 0, 
+                        duration: 0.5, 
+                        ease: "elastic.out(1, 0.3)"
+                    });
+                });
+            });
+        }
+
+        // 2. HERO REVEAL ANIMATION (Works on both)
+        const tl = gsap.timeline();
+        
+        tl.from(".reveal-text span", {
+            y: 50,
+            opacity: 0,
+            duration: 1,
+            stagger: 0.2,
+            ease: "power4.out"
+        })
+        .from(".reveal-fade", {
+            y: 20,
+            opacity: 0,
+            duration: 0.8,
+            stagger: 0.2,
+            ease: "power2.out"
+        }, "-=0.5");
+
+        // 3. SCROLL ANIMATIONS (GALLERY)
+        gsap.utils.toArray('.gallery-item').forEach((item, index) => {
+            gsap.from(item, {
+                scrollTrigger: {
+                    trigger: item,
+                    start: "top 90%", // Trigger earlier on mobile
+                    toggleActions: "play none none reverse"
+                },
+                y: 50,
+                opacity: 0,
+                duration: 0.6,
+                ease: "power3.out",
+                // Remove stagger on mobile for snappier feel
+                delay: window.innerWidth > 768 ? index % 3 * 0.1 : 0 
+            });
+        });
+
+        // 4. PARALLAX SHAPES (Desktop Only)
+        if (window.matchMedia("(min-width: 768px)").matches) {
+            document.addEventListener('mousemove', (e) => {
+                const shapes = document.querySelectorAll('.parallax-shape, .fixed');
+                const x = (window.innerWidth - e.pageX * 2) / 100;
+                const y = (window.innerHeight - e.pageY * 2) / 100;
+
+                shapes.forEach(shape => {
+                    const speed = shape.getAttribute('data-speed') || 0.2;
+                    gsap.to(shape, {
+                        x: x * 20 * speed,
+                        y: y * 20 * speed,
+                        duration: 1,
+                        ease: "power2.out"
+                    });
+                });
+            });
+        }
+
+        // Text reveal on Scroll for Title
+        gsap.from(".section-title", {
+            scrollTrigger: {
+                trigger: ".section-title",
+                start: "top 85%",
+            },
+            x: -50,
+            opacity: 0,
+            duration: 1,
+            ease: "power4.out"
+        });
+
+        gsap.from(".section-desc", {
+            scrollTrigger: {
+                trigger: ".section-desc",
+                start: "top 85%",
+            },
+            x: 50,
+            opacity: 0,
+            duration: 1,
+            ease: "power4.out",
+            delay: 0.2
+        });
+
+    </script>
+</body>
+</html>
